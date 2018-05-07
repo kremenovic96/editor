@@ -33,7 +33,7 @@ public class Editor extends Application {
         /**
          * The Text to display on the screen.
          */
-        private Text displayText = new Text(STARTING_TEXT_POSITION_X, STARTING_TEXT_POSITION_Y, "");
+        private Text displayText;// = new Text(STARTING_TEXT_POSITION_X, STARTING_TEXT_POSITION_Y, "");
         private int fontSize = STARTING_FONT_SIZE;
         Group rootCopy;
         private String fontName = "Verdana";
@@ -44,11 +44,6 @@ public class Editor extends Application {
             // Initialize some empty text and add it to root so that it will be displayed.
             displayText = new Text(textX, textY, "");
             //listOfText.add(displayText);
-            // Always set the text origin to be VPos.TOP! Setting the origin to be VPos.TOP means
-            // that when the text is assigned a y-position, that position corresponds to the
-            // highest position across all letters (for example, the top of a letter like "I", as
-            // opposed to the top of a letter like "e"), which makes calculating positions much
-            // simpler!
             displayText.setTextOrigin(VPos.TOP);
             displayText.setFont(Font.font(fontName, fontSize));
 
@@ -61,9 +56,6 @@ public class Editor extends Application {
         @Override
         public void handle(KeyEvent keyEvent) {
             if (keyEvent.getEventType() == KeyEvent.KEY_TYPED) {
-                // Use the KEY_TYPED event rather than KEY_PRESSED for letter keys, because with
-                // the KEY_TYPED event, javafx handles the "Shift" key and associated
-                // capitalization.
                 String characterTyped = keyEvent.getCharacter();
                 if (characterTyped.length() > 0 && characterTyped.charAt(0) != 8) {
                     // Ignore control keys, which have non-zero length, as well as the backspace
@@ -75,13 +67,12 @@ public class Editor extends Application {
                     System.out.println(listOfText.size());
                    // System.out.println(listOfText);
                     keyEvent.consume();
+                    alignText("typed");
+
                 }
 
-                alignText("typed");
+                //alignText("typed");
             } else if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
-                // Arrow keys should be processed using the KEY_PRESSED event, because KEY_PRESSED
-                // events have a code that we can check (KEY_TYPED events don't have an associated
-                // KeyCode).
                 KeyCode code = keyEvent.getCode();
                 if (code == KeyCode.UP) {
                     //fontSize += 5;
@@ -113,9 +104,9 @@ public class Editor extends Application {
                 double textHeight = displayText.getLayoutBounds().getHeight();
                 double textWidth = displayText.getLayoutBounds().getWidth();
                 double textTop =textY+10;
-                double textLeft = textX += textWidth;
+                textX += textWidth;
                 displayText.setTextOrigin(VPos.TOP);
-                displayText.setX(textLeft);
+                displayText.setX(textX);
                 displayText.setY(textTop);
                 listOfText.add(displayText);
                 displayText.toFront();
@@ -129,12 +120,12 @@ public class Editor extends Application {
                 //double textTop = textY + 10;//not needed
                 //double textLeft = textX -= textWidth;
                 textX -= textWidth;
-                lastChar.setText(" deleted");
-                System.out.println(rootCopy.getChildren());
-
-                System.out.println("size before remove "+rootCopy.getChildren().size());
+                /*System.out.println("size before remove "+rootCopy.getChildren().size());
+                System.out.println(rootCopy.getChildren());*/
                 rootCopy.getChildren().remove(rootCopy.getChildren().size()-1);
-                System.out.println("size after remove "+rootCopy.getChildren().size());
+                /*System.out.println("size after remove "+rootCopy.getChildren().size());
+                System.out.println(rootCopy.getChildren());
+                System.out.println(rootCopy.getChildren().size());*/
             }
 
             else if(keyboard.equals("up")){
