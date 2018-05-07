@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -37,12 +38,12 @@ public class Editor extends Application {
         Group rootCopy;
         private String fontName = "Verdana";
         KeyEventHandler(final Group root, int windowWidth, int windowHeight) {
-            textX = 5;
+            textX = 0;
             textY = 5;
 
             // Initialize some empty text and add it to root so that it will be displayed.
             displayText = new Text(textX, textY, "");
-            listOfText.add(displayText);
+            //listOfText.add(displayText);
             // Always set the text origin to be VPos.TOP! Setting the origin to be VPos.TOP means
             // that when the text is assigned a y-position, that position corresponds to the
             // highest position across all letters (for example, the top of a letter like "I", as
@@ -54,7 +55,7 @@ public class Editor extends Application {
             // All new Nodes need to be added to the root in order to be displayed.
             rootCopy = root;
             //root.getChildren().addAll(listOfText);
-            rootCopy.getChildren().addAll(listOfText);
+            //rootCopy.getChildren().addAll(listOfText);
         }
 
         @Override
@@ -76,48 +77,95 @@ public class Editor extends Application {
                     keyEvent.consume();
                 }
 
-                centerText();
+                alignText("typed");
             } else if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
                 // Arrow keys should be processed using the KEY_PRESSED event, because KEY_PRESSED
                 // events have a code that we can check (KEY_TYPED events don't have an associated
                 // KeyCode).
                 KeyCode code = keyEvent.getCode();
                 if (code == KeyCode.UP) {
-                    fontSize += 5;
-                    for(Text t : listOfText)
-                        t.setFont(Font.font(fontName, fontSize));
+                    //fontSize += 5;
+                    /*for(Text t : listOfText)
+                        t.setFont(Font.font(fontName, fontSize));*/
                     //displayText.setFont(Font.font(fontName, fontSize));
-                    //centerText();
+                    alignText("up");
                 } else if (code == KeyCode.DOWN) {
-                    fontSize = Math.max(0, fontSize - 5);
+                    /*fontSize = Math.max(0, fontSize - 5);
                     for(Text t : listOfText)
-                        t.setFont(Font.font(fontName, fontSize));
+                        t.setFont(Font.font(fontName, fontSize));*/
                     //displayText.setFont(Font.font(fontName, fontSize));
-                    //centerText();
+                    alignText("down");
                 }
                 else if (code == KeyCode.BACK_SPACE){
-                    rootCopy.getChildren().remove(rootCopy.getChildren().size()-1);
-                    textX -=
+                    if(rootCopy.getChildren().size() > 0) {
+                        //Node txt = rootCopy.getChildren().get(rootCopy.getChildren().size() - 1);
+                        //System.out.println(txt + " node txt");
+                        ///rootCopy.getChildren().remove(rootCopy.getChildren().size() - 1);
+                        //System.out.println(rootCopy.getChildren().get(rootCopy.getChildren().size() - 1) + " last");
+                        alignText("backspace");
+                    }
                 }
             }
         }
 
-        private void centerText() {
-            // Figure out the size of the current text.
-            double textHeight = displayText.getLayoutBounds().getHeight();
-            double textWidth = displayText.getLayoutBounds().getWidth();
+        private void alignText(String keyboard) {
+            if(keyboard.equals("typed")){
+                double textHeight = displayText.getLayoutBounds().getHeight();
+                double textWidth = displayText.getLayoutBounds().getWidth();
+                double textTop =textY+10;
+                double textLeft = textX += textWidth;
+                displayText.setTextOrigin(VPos.TOP);
+                displayText.setX(textLeft);
+                displayText.setY(textTop);
+                listOfText.add(displayText);
+                displayText.toFront();
+                rootCopy.getChildren().add(displayText);
+            }
 
+            else if(keyboard.equals("backspace")){
+                Text lastChar = (Text)rootCopy.getChildren().get(rootCopy.getChildren().size()-1);
+                double textHeight = lastChar.getLayoutBounds().getHeight();
+                double textWidth = lastChar.getLayoutBounds().getWidth();
+                //double textTop = textY + 10;//not needed
+                //double textLeft = textX -= textWidth;
+                textX -= textWidth;
+                lastChar.setText(" deleted");
+                System.out.println(rootCopy.getChildren());
+
+                System.out.println("size before remove "+rootCopy.getChildren().size());
+                rootCopy.getChildren().remove(rootCopy.getChildren().size()-1);
+                System.out.println("size after remove "+rootCopy.getChildren().size());
+            }
+
+            else if(keyboard.equals("up")){
+                fontSize += 4;
+                for(Text t : listOfText){
+                    t.setFont(Font.font(fontName, fontSize));
+                }
+            }
+            else if(keyboard.equals("down")){
+                if(fontSize > 4){
+                    fontSize -= 4;
+                    for(Text t : listOfText){
+                        t.setFont(Font.font(fontName, fontSize));
+                    }
+                }
+            }
+            // Figure out the size of the current text.
+            /*double textHeight = displayText.getLayoutBounds().getHeight();
+            double textWidth = displayText.getLayoutBounds().getWidth();
+*/
             // Calculate the position so that the text will be centered on the screen.
-            double textTop =textY+10;
-            double textLeft = textX += textWidth; // textCenterX - textWidth / 2;
+           /* double textTop =textY+10;
+            double textLeft = textX += textWidth;*/ // textCenterX - textWidth / 2;
 
             // Re-position the text.
-            displayText.setX(textLeft);
+           /* displayText.setX(textLeft);
             displayText.setY(textTop);
             listOfText.add(displayText);
             // Make sure the text appears in front of any other objects you might add.
             displayText.toFront();
-            rootCopy.getChildren().add(displayText);
+            rootCopy.getChildren().add(displayText);*/
 
 
         }
