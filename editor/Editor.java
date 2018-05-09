@@ -39,7 +39,7 @@ public class Editor extends Application {
         private String fontName = "Verdana";
         KeyEventHandler(final Group root, int windowWidth, int windowHeight) {
             textX = 0;
-            textY = 5;
+            textY = 0;
 
             // Initialize some empty text and add it to root so that it will be displayed.
             displayText = new Text(textX, textY, "");
@@ -103,7 +103,7 @@ public class Editor extends Application {
             if(keyboard.equals("typed")){
                 double textHeight = displayText.getLayoutBounds().getHeight();
                 double textWidth = displayText.getLayoutBounds().getWidth();
-                double textTop =textY+10;
+                double textTop =textY;
                 textX += textWidth;
                 displayText.setTextOrigin(VPos.TOP);
                 displayText.setX(textX);
@@ -115,8 +115,8 @@ public class Editor extends Application {
 
             else if(keyboard.equals("backspace")){
                 Text lastChar = (Text)rootCopy.getChildren().get(rootCopy.getChildren().size()-1);
-                double textHeight = lastChar.getLayoutBounds().getHeight();
-                double textWidth = lastChar.getLayoutBounds().getWidth();
+                int textHeight = (int)lastChar.getLayoutBounds().getHeight();
+                int textWidth = (int)lastChar.getLayoutBounds().getWidth();
                 //double textTop = textY + 10;//not needed
                 //double textLeft = textX -= textWidth;
                 textX -= textWidth;
