@@ -64,7 +64,7 @@ public class Editor extends Application {
                     //STARTING_TEXT_POSITION_X++;
                     displayText = new Text(textX, textY, characterTyped);
                     //listOfText.add(displayText);
-                    System.out.println(listOfText.size());
+                    //System.out.println(listOfText.size());
                    // System.out.println(listOfText);
                     keyEvent.consume();
                     alignText("typed");
@@ -101,28 +101,35 @@ public class Editor extends Application {
 
         private void alignText(String keyboard) {
             if(keyboard.equals("typed")){
-                double textHeight = displayText.getLayoutBounds().getHeight();
-                double textWidth = displayText.getLayoutBounds().getWidth();
-                double textTop =textY;
-                textX += textWidth;
+                int textHeight = (int)Math.ceil(displayText.getLayoutBounds().getHeight());
+                int textWidth = (int)Math.ceil(displayText.getLayoutBounds().getWidth());
+                System.out.println("ceil "+(int)Math.ceil(displayText.getLayoutBounds().getWidth()));
+                System.out.println("no ceil "+displayText.getLayoutBounds().getWidth());
+                int textTop = textY;
+                if(listOfText.size() != 0)
+                    textX += (int)listOfText.get(listOfText.size()-1).getLayoutBounds().getWidth();
                 displayText.setTextOrigin(VPos.TOP);
                 displayText.setX(textX);
                 displayText.setY(textTop);
                 listOfText.add(displayText);
+
                 displayText.toFront();
                 rootCopy.getChildren().add(displayText);
             }
 
             else if(keyboard.equals("backspace")){
-                Text lastChar = (Text)rootCopy.getChildren().get(rootCopy.getChildren().size()-1);
+                Text lastChar = listOfText.get(listOfText.size()-1);
+                //Text lastChar = (Text)rootCopy.getChildren().get(rootCopy.getChildren().size()-1);
                 int textHeight = (int)lastChar.getLayoutBounds().getHeight();
-                int textWidth = (int)lastChar.getLayoutBounds().getWidth();
+                //int textWidth = (int)Math.ceil(displayText.getLayoutBounds().getWidth());
+                int textWidth = (int)displayText.getLayoutBounds().getWidth();
                 //double textTop = textY + 10;//not needed
                 //double textLeft = textX -= textWidth;
                 textX -= textWidth;
                 /*System.out.println("size before remove "+rootCopy.getChildren().size());
                 System.out.println(rootCopy.getChildren());*/
-                rootCopy.getChildren().remove(rootCopy.getChildren().size()-1);
+                listOfText.remove(listOfText.size()-1);
+                rootCopy.getChildren().remove(lastChar);
                 /*System.out.println("size after remove "+rootCopy.getChildren().size());
                 System.out.println(rootCopy.getChildren());
                 System.out.println(rootCopy.getChildren().size());*/
@@ -132,6 +139,7 @@ public class Editor extends Application {
                 fontSize += 4;
                 for(Text t : listOfText){
                     t.setFont(Font.font(fontName, fontSize));
+                    //t.setX(t.getX()+4);
                 }
             }
             else if(keyboard.equals("down")){
@@ -139,6 +147,7 @@ public class Editor extends Application {
                     fontSize -= 4;
                     for(Text t : listOfText){
                         t.setFont(Font.font(fontName, fontSize));
+                        //t.setX(t.getX()-4);
                     }
                 }
             }
