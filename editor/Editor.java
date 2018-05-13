@@ -88,7 +88,7 @@ public class Editor extends Application {
                     alignText("down");
                 }
                 else if (code == KeyCode.BACK_SPACE){
-                    if(rootCopy.getChildren().size() > 0) {
+                    if(listOfText.size() > 0) {
                         //Node txt = rootCopy.getChildren().get(rootCopy.getChildren().size() - 1);
                         //System.out.println(txt + " node txt");
                         ///rootCopy.getChildren().remove(rootCopy.getChildren().size() - 1);
@@ -122,10 +122,16 @@ public class Editor extends Application {
                 //Text lastChar = (Text)rootCopy.getChildren().get(rootCopy.getChildren().size()-1);
                 int textHeight = (int)lastChar.getLayoutBounds().getHeight();
                 //int textWidth = (int)Math.ceil(displayText.getLayoutBounds().getWidth());
-                int textWidth = (int)displayText.getLayoutBounds().getWidth();
+                //int textWidth = (int)displayText.getLayoutBounds().getWidth();
                 //double textTop = textY + 10;//not needed
                 //double textLeft = textX -= textWidth;
-                textX -= textWidth;
+                if(listOfText.size() >= 2) {
+                    int textWidth = (int)listOfText.get(listOfText.size()-2).getX();
+                    textX = textWidth;
+                }
+                else{
+                    textX = 0;
+                }
                 /*System.out.println("size before remove "+rootCopy.getChildren().size());
                 System.out.println(rootCopy.getChildren());*/
                 listOfText.remove(listOfText.size()-1);
