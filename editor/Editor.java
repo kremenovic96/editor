@@ -67,7 +67,12 @@ public class Editor extends Application {
                     //System.out.println(listOfText.size());
                    // System.out.println(listOfText);
                     keyEvent.consume();
-                    alignText("typed");
+                    if(characterTyped.equals("\r")){
+                        alignText("enter");
+                    }
+                    else{
+                        alignText("typed");
+                    }
 
                 }
 
@@ -105,12 +110,12 @@ public class Editor extends Application {
                 int textWidth = (int)Math.ceil(displayText.getLayoutBounds().getWidth());
                 System.out.println("ceil "+(int)Math.ceil(displayText.getLayoutBounds().getWidth()));
                 System.out.println("no ceil "+displayText.getLayoutBounds().getWidth());
-                int textTop = textY;
-                if(listOfText.size() != 0)
+                int linenumber = textY;
+                if(!listOfText.isEmpty())
                     textX += (int)listOfText.get(listOfText.size()-1).getLayoutBounds().getWidth();
                 displayText.setTextOrigin(VPos.TOP);
                 displayText.setX(textX);
-                displayText.setY(textTop);
+                displayText.setY(linenumber);
                 listOfText.add(displayText);
 
                 displayText.toFront();
@@ -120,21 +125,41 @@ public class Editor extends Application {
             else if(keyboard.equals("backspace")){
                 Text lastChar = listOfText.get(listOfText.size()-1);
                 //Text lastChar = (Text)rootCopy.getChildren().get(rootCopy.getChildren().size()-1);
-                int textHeight = (int)lastChar.getLayoutBounds().getHeight();
+                //int textHeight = (int)lastChar.getLayoutBounds().getHeight();
                 //int textWidth = (int)Math.ceil(displayText.getLayoutBounds().getWidth());
                 //int textWidth = (int)displayText.getLayoutBounds().getWidth();
                 //double textTop = textY + 10;//not needed
                 //double textLeft = textX -= textWidth;
-                if(listOfText.size() >= 2) {
-                    int textWidth = (int)listOfText.get(listOfText.size()-2).getX();
-                    textX = textWidth;
+                listOfText.remove(listOfText.size()-1);
+                if(!listOfText.isEmpty()){
+                    if(lastChar.getY()==0){
+                        int textWidth = (int) listOfText.get(listOfText.size() - 1).getX();
+                        textX = textWidth;
+                    }
+                    else{
+                        int textWidth = (int) listOfText.get(listOfText.size()-1).getX();
+                        textX = textWidth;
+                        textY -= lastChar.getY()-listOfText.get(listOfText.size()-1).getY();
+                    }
                 }
-                else{
-                    textX = 0;
+               /* if(textY > 0 && textX == 0 ){
+                    int textHeight = (int)listOfText.get(0).getLayoutBounds().getHeight();
+                    textY -= textHeight;
+                    textX = (int)listOfText.get(listOfText.size()-1).getX();
                 }
+                else {
+                    if (listOfText.size() >= 2) {
+                        int textWidth = (int) listOfText.get(listOfText.size() - 1).getX();
+                        textX = textWidth;
+                        int textHeight = (int)listOfText.get(listOfText.size() - 1).getLayoutBounds().getHeight();
+                        textY -= textHeight;
+                    } else {
+                        textX = 0;
+                    }
+                }*/
                 /*System.out.println("size before remove "+rootCopy.getChildren().size());
                 System.out.println(rootCopy.getChildren());*/
-                listOfText.remove(listOfText.size()-1);
+                //listOfText.remove(listOfText.size()-1);
                 rootCopy.getChildren().remove(lastChar);
                 /*System.out.println("size after remove "+rootCopy.getChildren().size());
                 System.out.println(rootCopy.getChildren());
@@ -156,6 +181,10 @@ public class Editor extends Application {
                         //t.setX(t.getX()-4);
                     }
                 }
+            }
+            else if(keyboard.equals("enter")){
+                textX = 0;
+                textY += (int) new Text("a").getLayoutBounds().getHeight();
             }
             // Figure out the size of the current text.
             /*double textHeight = displayText.getLayoutBounds().getHeight();
