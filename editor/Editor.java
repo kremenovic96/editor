@@ -111,8 +111,10 @@ public class Editor extends Application {
                 System.out.println("ceil "+(int)Math.ceil(displayText.getLayoutBounds().getWidth()));
                 System.out.println("no ceil "+displayText.getLayoutBounds().getWidth());
                 int linenumber = textY;
+
                 if(!listOfText.isEmpty())
                     textX += (int)listOfText.get(listOfText.size()-1).getLayoutBounds().getWidth();
+                else textX = 0;
                 displayText.setTextOrigin(VPos.TOP);
                 displayText.setX(textX);
                 displayText.setY(linenumber);
@@ -168,17 +170,30 @@ public class Editor extends Application {
 
             else if(keyboard.equals("up")){
                 fontSize += 4;
-                for(Text t : listOfText){
+               /* for(Text t : listOfText){
                     t.setFont(Font.font(fontName, fontSize));
-                    //t.setX(t.getX()+4);
-                }
+                    //t.setX(t.getX()+20);
+                    if (t.getX() != 0){
+                        t.setX(t.getX() + 25);
+                    }
+                }*/
+               for(int i = 0; i < listOfText.size(); i++){
+                   Text t = listOfText.get(i);
+                   t.setFont(Font.font(fontName, fontSize));
+                   if (t.getX() != 0){
+                       t.setX(listOfText.get(i-1).getX() + listOfText.get(i-1).getLayoutBounds().getWidth());
+                   }
+               }
             }
             else if(keyboard.equals("down")){
                 if(fontSize > 4){
                     fontSize -= 4;
-                    for(Text t : listOfText){
+                    listOfText.get(0).setFont(Font.font(fontName, fontSize));
+                    for(int i = 1; i < listOfText.size(); i++){
+                        // ovjde staviti uslov zbog kraja reda
+                        Text t = listOfText.get(i);
                         t.setFont(Font.font(fontName, fontSize));
-                        //t.setX(t.getX()-4);
+                        t.setX(listOfText.get(i-1).getX() + listOfText.get(i-1).getLayoutBounds().getWidth());
                     }
                 }
             }
