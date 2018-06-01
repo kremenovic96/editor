@@ -26,6 +26,7 @@ public class Editor extends Application {
         int textX;
         int textY;
 
+        boolean startOfLine = true;
         private static final int STARTING_FONT_SIZE = 20;
         private int STARTING_TEXT_POSITION_X = 250;
         private int STARTING_TEXT_POSITION_Y = 250;
@@ -110,16 +111,24 @@ public class Editor extends Application {
                 int textWidth = (int)Math.ceil(displayText.getLayoutBounds().getWidth());
                 System.out.println("ceil "+(int)Math.ceil(displayText.getLayoutBounds().getWidth()));
                 System.out.println("no ceil "+displayText.getLayoutBounds().getWidth());
-                int linenumber = textY;
+                //int linenumber = textY;
 
-                if(!listOfText.isEmpty())
-                    textX += (int)listOfText.get(listOfText.size()-1).getLayoutBounds().getWidth();
-                else textX = 0;
+                if(!listOfText.isEmpty()) {
+                    if (startOfLine){
+                        textX = 0;
+                        startOfLine = false;
+                    }
+                    else {
+                        textX += (int) listOfText.get(listOfText.size() - 1).getLayoutBounds().getWidth();
+                    }
+                }
+                //else textX = 0;
                 displayText.setTextOrigin(VPos.TOP);
                 displayText.setX(textX);
-                displayText.setY(linenumber);
+                displayText.setY(textY);
+                displayText.setFont(Font.font(fontName, fontSize));
                 listOfText.add(displayText);
-
+                System.out.println(textX); //
                 displayText.toFront();
                 rootCopy.getChildren().add(displayText);
             }
@@ -183,6 +192,9 @@ public class Editor extends Application {
                    if (t.getX() != 0){
                        t.setX(listOfText.get(i-1).getX() + listOfText.get(i-1).getLayoutBounds().getWidth());
                    }
+                   if (t.getY() != 0){
+                       t.setY(listOfText.get(0).getY() + listOfText.get(0).getLayoutBounds().getHeight());
+                   }
                }
             }
             else if(keyboard.equals("down")){
@@ -199,6 +211,7 @@ public class Editor extends Application {
             }
             else if(keyboard.equals("enter")){
                 textX = 0;
+                startOfLine = true;
                 textY += (int) new Text("a").getLayoutBounds().getHeight();
             }
             // Figure out the size of the current text.
