@@ -192,9 +192,9 @@ public class Editor extends Application {
                    if (t.getX() != 0){
                        t.setX(listOfText.get(i-1).getX() + listOfText.get(i-1).getLayoutBounds().getWidth());
                    }
-                   if (t.getY() != 0){
-                       t.setY(listOfText.get(0).getY() + listOfText.get(0).getLayoutBounds().getHeight());
-                   }
+                   /*if (t.getY() != 0){
+                       t.setY(t.getY() + t.getLayoutBounds().getHeight());
+                   }*/
                }
             }
             else if(keyboard.equals("down")){
@@ -204,8 +204,10 @@ public class Editor extends Application {
                     for(int i = 1; i < listOfText.size(); i++){
                         // ovjde staviti uslov zbog kraja reda
                         Text t = listOfText.get(i);
+                        if (t.getX() != 0) {
+                            t.setX(listOfText.get(i - 1).getX() + listOfText.get(i - 1).getLayoutBounds().getWidth());
+                        }
                         t.setFont(Font.font(fontName, fontSize));
-                        t.setX(listOfText.get(i-1).getX() + listOfText.get(i-1).getLayoutBounds().getWidth());
                     }
                 }
             }
